@@ -1,144 +1,154 @@
-<div align="center">
+<div align="center" dir="rtl">
 
-<img src="assets/readme/hero.gif" width="1200" alt="PIMX SONIC · V2: a media-download hub with a vinyl record, video and cloud" />
+# PIMX SAVE BOT
 
-**[English](README.md) · [فارسی](README.fa.md)**
+**یک لینک بفرست؛ فایل یا لینک دانلود دریافت کن.**
+
+**[باز کردن @PIMX_SAVE_BOT ↗](https://t.me/PIMX_SAVE_BOT)**
+
+[English](README.md) · [فارسی](README.fa.md) · [کد پروژه](https://github.com/MOHAMMADREZAABEDINPOOR/PIMX_SAVE_BOT)
 
 </div>
 
-<div dir="rtl">
+PIMX SAVE BOT یک ربات تلگرام با TypeScript است که روی Deno و Supabase Edge Functions اجرا می‌شود. با دریافت لینک عمومی رسانه، تلاش می‌کند فایل را استخراج کند، به گفت‌وگو بفرستد و دکمه‌های دانلود مستقیم و منبع را نمایش دهد.
 
-# 🎵 PIMX SONIC · V2
+نام رسمی پروژه **PIMX_SAVE_BOT** و نام کاربری تلگرام **@PIMX_SAVE_BOT** است. این همان نسخهٔ جدید TypeScript است که قبلاً با نام `PIMX_SONIC_BOT_V2` منتشر شده بود؛ تاریخچهٔ مخزن حفظ شده است.
 
-ربات رسانه تلگرام با TypeScript/Deno روی Supabase Edge Function؛ استخراج‌گرهای مستقل لینک YouTube، Instagram، X، SoundCloud و Spotify را پردازش می‌کنند.
+## استفاده از ربات
 
-[GitHub](https://github.com/MOHAMMADREZAABEDINPOOR/PIMX_SONIC_BOT_V2) · [PIMX / Profile](https://github.com/MOHAMMADREZAABEDINPOOR) · [بنر ثابت](assets/readme/hero.png)
+1. [@PIMX_SAVE_BOT](https://t.me/PIMX_SAVE_BOT) را در تلگرام باز کن.
+2. دستور `/start` یا `/help` را بفرست.
+3. لینک عمومی رسانه را به‌صورت پیام متنی ارسال کن.
+4. اگر ارسال موفق باشد، تصویر، ویدئو یا صوت دریافت می‌کنی. در صورت شکست ارسال داخل گفت‌وگو، از لینک دانلود ارائه‌شده استفاده کن.
 
-| نمای کلی | جزئیات |
-|:---|:---|
-| 🎵 تجربه | ربات تلگرام و ابزارهای همراه آن |
-| 🧰 فناوری | `TypeScript / Deno` · `Telegram` |
-| 🌐 زبان راهنما | [English](README.md) · [فارسی](README.fa.md) |
+پردازشگر فعلی فقط **اولین لینک هر پیام متنی** را بررسی می‌کند. کپشن فایل‌ها پردازش نمی‌شود و دستور مستقلی برای تبدیل لینک به صوت وجود ندارد.
 
-[✨ امکانات](#امکانات) · [🚀 شروع کار](#شروع-کار) · [⚙️ تنظیمات](#تنظیمات) · [🌍 استقرار](#استقرار)
+## مسیرهای استخراج موجود در کد
 
----
+این جدول رفتار پیاده‌سازی را توضیح می‌دهد؛ موفقیت همهٔ پست‌ها یا دسترس‌پذیری دائمی سرویس‌ها را تضمین نمی‌کند.
 
-<a id="امکانات"></a>
+| منبع | پیاده‌سازی | نکته |
+|---|---|---|
+| YouTube | درخواست ویدئو یا صوت از Cobalt | کیفیت پیش‌فرض درخواستی 1080p و کدک H.264 است؛ نتیجه به سرویس استخراج بستگی دارد. |
+| Instagram | Cobalt و پاسخ‌های چندفایلی picker | آیتم‌های کاروسل جداگانه ارسال می‌شوند؛ پارامترهای پرس‌وجوی لینک پیش از استخراج حذف می‌شوند. |
+| X / Twitter | اطلاعات FxTwitter، سپس مسیر جایگزین Cobalt | ویدئوی دارای بیشترین بیت‌ریت گزارش‌شده انتخاب می‌شود؛ در نبود ویدئو، تصاویر بررسی می‌شوند. |
+| SoundCloud | حالت صوتی Cobalt | در صورت استخراج موفق، خروجی MP3 درخواست می‌شود. |
+| Spotify | اطلاعات آهنگ، جست‌وجوی YouTube و سپس Cobalt | فایل اصلی Spotify دانلود نمی‌شود؛ اولین نتیجهٔ YouTube استفاده می‌شود و پیش‌نمایش Spotify مسیر جایگزین است. |
+| لینک‌های دیگر | درخواست عمومی Cobalt | به پشتیبانی همان نمونهٔ Cobalt بستگی دارد؛ پلتفرم‌های دیگر تضمین‌شده نیستند. |
 
-## ✨ امکانات
+بخش اطلاعات Spotify انتظار لینک `open.spotify.com/track/...` را دارد. لینک آلبوم، پلی‌لیست، لینک کوتاه، محتوای خصوصی، حذف‌شده یا محدود ممکن است نتیجه ندهد.
 
-| بخش | قابلیت موجود |
-|:---|:---|
-| 📥 دریافت | استخراج‌گر هر پلتفرم و لایه مسیریابی مشترک |
-| 📥 دریافت | ارسال رسانه به تلگرام و لینک مستقیم جایگزین |
-| ⚡ روند کار | ابزار جایگزین Cobalt و دریافت فراداده Spotify |
-| 🔌 اتصال | وب‌هوک serverless و مسیر GET بررسی سلامت |
+## معماری
 
-<a id="پشته-فنی"></a>
-
-## 🧰 پشته فنی
-
-| ابزار | نسخه یا منبع |
-|---|---|
-| TypeScript / Deno | `Supabase Edge Runtime` |
-| Telegram | `Bot API` |
-
-<a id="شروع-کار"></a>
-
-## 🚀 شروع کار
-
-Node.js برای CLI Supabase، پروژه Supabase و توکن ربات تلگرام. Deno برای بررسی کد Edge مفید است.
-
-<div dir="ltr">
-
-```bash
-git clone https://github.com/MOHAMMADREZAABEDINPOOR/PIMX_SONIC_BOT_V2.git
-cd PIMX_SONIC_BOT_V2
-
-npx supabase login
-npx supabase link --project-ref YOUR_PROJECT_REF
-# Create supabase/secrets.local.env with TELEGRAM_BOT_TOKEN (never commit it)
-npx supabase secrets set --env-file supabase/secrets.local.env
-npx supabase functions deploy telegram-bot --no-verify-jwt
+```mermaid
+flowchart LR
+  A[Telegram text message] --> B[Supabase telegram-bot webhook]
+  B --> C[First URL and platform routing]
+  C --> D[Platform extractor]
+  D --> E[Cobalt / FxTwitter / source metadata]
+  E --> F[Resolved media items]
+  F --> G[Binary upload attempt]
+  G --> H[Telegram photo / video / audio]
+  G --> I[URL delivery or download-link fallback]
 ```
 
-</div>
+ربات مستقیماً از HTTP Bot API تلگرام استفاده می‌کند. در این کد، فریم‌ورک ربات، دیتابیس برنامه، آرشیو دائمی دانلود، صف پردازش یا رابط وب مستقلی وجود ندارد.
 
-<a id="تنظیمات"></a>
+## ساختار پروژه
 
-## ⚙️ تنظیمات
+```text
+supabase/
+  config.toml
+  functions/telegram-bot/
+    index.ts                  # دریافت درخواست، دستورها و جریان پردازش
+    telegram.ts               # ارسال فایل و مسیرهای جایگزین تلگرام
+    types.ts                  # نوع دادهٔ پیام‌ها و رسانه‌ها
+    deno.json                 # وابستگی‌های زمان اجرا
+    extractors/
+      index.ts                # انتخاب استخراج‌کننده
+      youtube.ts
+      instagram.ts
+      twitter.ts
+      soundcloud.ts
+      spotify.ts
+    utils/
+      cobalt.ts               # انتخاب سرویس و زمان انتظار درخواست
+      helpers.ts              # تشخیص لینک و قالب‌بندی اطلاعات
+```
 
-کلیدهای زیر از فایل نمونه یا کد استخراج شده‌اند؛ همه الزاماً اجباری نیستند. مقدار و پیش‌فرض را در همان فایل بررسی و اسرار را فقط در محیط محلی یا هاست تنظیم کنید.
+## تنظیمات
 
-| نام | کاربرد |
+| متغیر | ضرورت | کاربرد |
+|---|---|---|
+| `TELEGRAM_BOT_TOKEN` | برای پردازش POST لازم است | توکن BotFather رباتی که مدیریت می‌کنی. |
+| `COBALT_API_URL` | اختیاری | آدرس نمونهٔ ترجیحی Cobalt که پیش از دو نمونهٔ جایگزین داخل `utils/cobalt.ts` امتحان می‌شود. |
+
+فایل نادیده‌گرفته‌شدهٔ `.env.local` را با مقادیر خودت بساز:
+
+```dotenv
+TELEGRAM_BOT_TOKEN=REPLACE_WITH_YOUR_BOTFATHER_TOKEN
+# اختیاری: آدرس نمونه‌ای که در اختیار داری یا به آن دسترسی داری.
+# COBALT_API_URL=https://your-cobalt-instance.example/
+```
+
+درخواست Cobalt به‌صورت JSON و بدون هدر کلید API ارسال می‌شود. دسترسی، سازگاری و محدودیت درخواست به نمونهٔ انتخابی بستگی دارد. توکن تلگرام را در فایل محیطی محلی یا Secrets سوپابیس نگه دار؛ آن را داخل README یا کامیت قرار نده. [راهنمای متغیرهای محیطی Supabase](https://supabase.com/docs/guides/functions/secrets).
+
+## اجرای محلی
+
+[Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) و Docker را برای محیط محلی نصب کن. از ریشهٔ مخزن اجرا کن:
+
+```sh
+supabase start
+supabase functions serve telegram-bot --env-file .env.local --no-verify-jwt
+```
+
+آدرس محلی تابع `http://127.0.0.1:54321/functions/v1/telegram-bot` است. درخواست GET، نام ربات و زمان را در JSON برمی‌گرداند. این پاسخ صحت توکن، ثبت وب‌هوک، دسترس‌پذیری استخراج‌کننده‌ها یا ارسال موفق فایل را بررسی نمی‌کند.
+
+اگر توکن واقعی تنظیم شده باشد، درخواست POST می‌تواند پیام واقعی ارسال کند. برای توسعه از ربات و گفت‌وگوی آزمایشی خودت استفاده کن.
+
+## دیپلوی نمونهٔ خودت
+
+نام تابع همچنان `telegram-bot` است؛ تغییر نام مخزن، آدرس تابع Supabase را عوض نمی‌کند. از پروژه و دسترسی‌های خودت استفاده کن:
+
+```sh
+supabase login
+supabase link --project-ref YOUR_PROJECT_REF
+supabase secrets set --env-file .env.local
+supabase functions deploy telegram-bot --no-verify-jwt
+```
+
+قالب آدرس `https://YOUR_PROJECT_REF.supabase.co/functions/v1/telegram-bot` است. تنظیم موجود `verify_jwt = false` است، چون تلگرام JWT کاربر Supabase را همراه وب‌هوک ارسال نمی‌کند. [راهنمای دیپلوی](https://supabase.com/docs/guides/functions/deploy)، [تنظیمات تابع](https://supabase.com/docs/guides/functions/function-configuration).
+
+آدرس HTTPS را با متد `setWebhook` تلگرام ثبت کن. نمونهٔ PowerShell زیر فرض می‌کند توکن خودت از قبل در متغیر محیطی قرار دارد:
+
+```powershell
+$botApi = 'https://api.telegram.org/bot' + $env:TELEGRAM_BOT_TOKEN
+Invoke-RestMethod -Method Post -Uri ($botApi + '/setWebhook') -Body @{
+  url = 'https://YOUR_PROJECT_REF.supabase.co/functions/v1/telegram-bot'
+  allowed_updates = '["message"]'
+}
+Invoke-RestMethod -Uri ($botApi + '/getWebhookInfo')
+```
+
+این دستورها وب‌هوک همان رباتی را تغییر می‌دهند که توکنش را وارد کرده‌ای. هر ربات فقط یک وب‌هوک فعال دارد. پردازشگر فعلی هدر `X-Telegram-Bot-Api-Secret-Token` را اعتبارسنجی نمی‌کند؛ تعیین `secret_token` در تلگرام به‌تنهایی این قابلیت را به کد اضافه نمی‌کند. [مستندات وب‌هوک تلگرام](https://core.telegram.org/bots/api#setwebhook).
+
+## محدودیت‌ها و رفتار اجرایی
+
+- کد فقط برای فایل‌هایی با حجم گزارش‌شده و دریافت‌شدهٔ حداکثر **50 MiB** تلاش به آپلود مستقیم می‌کند. تلگرام محدودیت‌های مخصوص هر نوع رسانه را دارد و ممکن است فایل کوچک‌تر هم رد شود. وجود لینک جایگزین، به معنای حجم نامحدود یا لینک دائمی نیست.
+- استخراج به سرویس‌های بیرونی و محتوای عمومی منبع وابسته است. لینک مستقیم ممکن است منقضی شود یا به دسترسی‌ای نیاز داشته باشد که تلگرام ندارد.
+- استخراج و ارسال داخل همان درخواست انجام می‌شود. صف پایدار، حذف پیام‌های تکراری بر اساس update ID، سهمیهٔ کاربر و پردازشگر تلاش مجدد وجود ندارد.
+- بخش مدیریت خطا پاسخ HTTP 200 می‌دهد؛ بنابراین درخواست تأییدشده ممکن است در داخل شکست خورده باشد. لاگ تابع و `getWebhookInfo` را همراه رفتار واقعی ربات بررسی کن.
+- لینک و درخواست رسانه به تلگرام، پلتفرم منبع و سرویس استخراج ارسال می‌شود. کد تاریخچهٔ برنامه‌ای نگه نمی‌دارد، اما این درخواست‌های بیرونی خصوصی محسوب نمی‌شوند.
+
+## رفع اشکال
+
+| نشانه | بررسی |
 |---|---|
-| `COBALT_API_URL` | تنظیم برنامه؛ تعریف را در منبع بررسی کنید |
-| `TELEGRAM_BOT_TOKEN` | اعتبارنامه یا اتصال؛ خصوصی نگه دارید |
+| GET پاسخ می‌دهد اما ربات جواب نمی‌دهد | Secret توکن و آدرس وب‌هوک را بررسی کن؛ GET صحت آن‌ها را نمی‌سنجد. |
+| پیش از ورود به کد، HTTP 401 دریافت می‌شود | تنظیم JWT تابع دیپلوی‌شده را بررسی کن. |
+| استخراج شکست می‌خورد | لینک عمومی، نمونهٔ Cobalt و لاگ تابع را بررسی کن. |
+| Spotify نسخهٔ دیگری از آهنگ یا فقط پیش‌نمایش می‌دهد | کد از نتیجهٔ جست‌وجوی YouTube و سپس پیش‌نمایش استفاده می‌کند. |
+| فقط یکی از چند لینک پردازش می‌شود | پردازشگر فعلی فقط `urls[0]` را انتخاب می‌کند. |
+| به‌جای فایل، دکمهٔ دانلود نمایش داده می‌شود | حجم فایل، رد شدن ارسال در تلگرام، خطای دریافت یا ناسازگاری رسانه می‌تواند علت باشد. |
 
-<a id="استفاده"></a>
-
-## 🎯 استفاده
-
-پروژه Supabase خود را لینک و TELEGRAM_BOT_TOKEN را به‌عنوان secret تنظیم کنید؛ سپس telegram-bot را مستقر کنید. آدرس HTTPS تابع را در setWebhook تلگرام ثبت و لینک پشتیبانی‌شده ارسال کنید.
-
-<a id="ساختار-پروژه"></a>
-
-## 🗂️ ساختار پروژه
-
-| مسیر | نقش |
-|---|---|
-| [`assets/`](assets/) | فایل برند، رسانه و README |
-| [`supabase/`](supabase/) | کد و تنظیم تابع Edge |
-
-<a id="فرمان‌ها-و-بررسی"></a>
-
-## 🧪 فرمان‌ها و بررسی
-
-فرمان آزمون خودکار در manifest تعریف نشده است. اجرای محلی و بررسی رفتار نمونه را انجام دهید.
-
-<a id="استقرار"></a>
-
-## 🌍 استقرار
-
-دستورهای بالا تابع Edge را مستقر می‌کنند. سپس URL خودتان را با API رسمی `setWebhook` ثبت کنید. فایل secrets.local.env و پوشه supabase/.temp/ منتشر نشوند.
-
-<a id="محدودیت‌ها"></a>
-
-## 📌 محدودیت‌ها
-
-محدودیت تلگرام، سرویس منبع و Edge برقرار است. لینک مستقیم به معنی ارسال نامحدود در تلگرام نیست. Spotify ممکن است فقط فراداده یا پیش‌نمایش بدهد. JWT برای وب‌هوک خاموش است؛ پیش از استفاده عمومی واقعی، احراز وب‌هوک اضافه کنید.
-
-<a id="رفع-مشکل"></a>
-
-## 🛠️ رفع مشکل
-
-- خطای سرویس یا ورود: اعتبارنامه و مدل و سرویس انتخابی را بررسی کنید.
-- پیام تلگرام نمی‌رسد: حالت polling و وب‌هوک و نمونه همزمان را بررسی کنید.
-- وابستگی غایب: از manifest استفاده یا در نبود آن importها را بررسی کنید.
-
-<a id="مشارکت"></a>
-
-## 🤝 مشارکت
-
-برای تغییر، شاخه مستقل بسازید، رفتار فعلی را بررسی کنید و توضیح روشن همراه تغییر بفرستید. اطلاعات خصوصی، خروجی build و دیتابیس محلی را commit نکنید.
-
-<a id="مجوز"></a>
-
-## 📄 مجوز
-
-فایل مجوز در این نسخه موجود نیست. نمایش عمومی کد به‌تنهایی مجوز استفاده مجدد نیست؛ برای شرایط استفاده با مالک مخزن هماهنگ کنید.
-
----
-
-ساخته‌شده در مجموعه **PIMX** · مستندات فارسی و انگلیسی.
-
----
-
-<div align="center">
-
-🎵 **PIMX SONIC · V2** · [English](README.md) · [فارسی](README.fa.md)
-
-</div>
-
-</div>
+این مستندات در **2026-10-08** با کد مخزن تطبیق داده شد. این بازنویسی ادعای آزمون سرتاسری دانلود همهٔ پلتفرم‌ها را ندارد.
